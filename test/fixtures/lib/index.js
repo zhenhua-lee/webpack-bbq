@@ -43,6 +43,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var rootReducer = (0, _redux.combineReducers)((0, _xtend2.default)(_reducers2.default, {
   routing: _reactRouterRedux.routerReducer
 }));
+console.info(window.initialState);
 var store = (0, _redux.createStore)(rootReducer,
 // 这里是一个约定
 window.initialState, (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reactRouterRedux.routerMiddleware)(history)),

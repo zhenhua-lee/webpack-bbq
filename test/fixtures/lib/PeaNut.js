@@ -10,11 +10,12 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PeaNut = function PeaNut() {
+var PeaNut = function PeaNut(props) {
   return _react2.default.createElement(
     'div',
     null,
-    'I am a PeaNut'
+    'I am a PeaNut',
+    props.children
   );
 };
 

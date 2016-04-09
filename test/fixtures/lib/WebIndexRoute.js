@@ -10,11 +10,12 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var WebIndexRoute = function WebIndexRoute() {
+var WebIndexRoute = function WebIndexRoute(props) {
   return _react2.default.createElement(
     'div',
     null,
-    'Web Index'
+    'Web Index',
+    props.children
   );
 };
 

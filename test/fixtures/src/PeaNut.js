@@ -1,8 +1,9 @@
 import React from 'react';
 
-const PeaNut = () => (
+const PeaNut = (props) => (
   <div>
     I am a PeaNut
+    {props.children}
   </div>
 );
 

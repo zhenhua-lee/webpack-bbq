@@ -8,12 +8,16 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _index = require('./index.css');
+
+var _index2 = _interopRequireDefault(_index);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var WebContaner = function WebContaner(props) {
   return _react2.default.createElement(
     'div',
-    null,
+    { className: _index2.default.js },
     'Web Contaner',
     props.children
   );

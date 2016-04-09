@@ -30,7 +30,10 @@ module.exports = (req, res, opts, cb) => {
     if (!renderProps) {
       return cb(new Error('renderProps is missing'));
     }
-    const javascripts = `<script src="${config.rootdir}${assets[`${appName}.js`]}"></script>`;
+    const javascripts = [
+      `<script>window.initialState = ${JSON.stringify(store.getState())}</script>`,
+      `<script src="${config.rootdir}${assets[`${appName}.js`]}"></script>`,
+    ];
     const el = createElement(App, { store, router: renderProps });
     const appHtml = ReactDOMServer.renderToString(el);
     const html = `<!doctype html>
@@ -41,7 +44,7 @@ module.exports = (req, res, opts, cb) => {
   </head>
   <body>
     <div id="${appName}">${appHtml}</div>
-    ${javascripts}
+    ${javascripts.join('\n    ')}
   </body>
 </html>
     `;

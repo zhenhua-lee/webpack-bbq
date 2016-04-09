@@ -14,6 +14,7 @@ import askForReduxDevTools from './askForReduxDevTools';
 const rootReducer = combineReducers(xtend(reducers, {
   routing: routerReducer,
 }));
+console.info(window.initialState)
 const store = createStore(
   rootReducer,
   // 这里是一个约定

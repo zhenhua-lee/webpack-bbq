@@ -1,8 +1,9 @@
 import React from 'react';
 
-const WebIndexRoute = () => (
+const WebIndexRoute = (props) => (
   <div>
     Web Index
+    {props.children}
   </div>
 );
 
