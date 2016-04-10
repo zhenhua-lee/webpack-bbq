@@ -6,6 +6,8 @@ const WebIndexRoute = (props) => (
     <a href={`https://github.com/wenbing/webpack-bbq`}>webpack-bbq</a>
     <br />
     Web Index
+    <br />
+    <Link to={`/web/peanut`}>PeaNut</Link>
     {props.children}
   </div>
 );

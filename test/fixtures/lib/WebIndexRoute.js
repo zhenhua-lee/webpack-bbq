@@ -25,6 +25,12 @@ var WebIndexRoute = function WebIndexRoute(props) {
     ),
     _react2.default.createElement('br', null),
     'Web Index',
+    _react2.default.createElement('br', null),
+    _react2.default.createElement(
+      _Link2.default,
+      { to: '/web/peanut' },
+      'PeaNut'
+    ),
     props.children
   );
 };
