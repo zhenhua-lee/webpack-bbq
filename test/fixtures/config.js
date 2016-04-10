@@ -4,7 +4,7 @@ if (process.env.NODE_ENV === undefined) {
 const basedir = __dirname;
 
 module.exports = {
-  basedir,
-  outputdir: `${basedir}/public`,
+  basedir: basedir,
+  outputdir: basedir + '/public',
   rootdir: '/public/',
 };

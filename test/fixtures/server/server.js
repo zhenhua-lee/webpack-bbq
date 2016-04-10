@@ -1,18 +1,19 @@
 'use strict';
 const http = require('http');
 
-const clearRequireCache = require('clear-require-cache');
-
+const appName = require('./appName');
 const port = require('./port');
 const config = require('../config');
 const routerpath = require.resolve('./router');
 let router = require(routerpath);
-const appName = require('./appName');
 
 const server = http.createServer((req, res) => {
-  if (req.url.indexOf(config.roodir) !== -1) {
-    clearRequireCache(routerpath);
-    router = require(routerpath);
+  if (process.env.NODE_ENV === 'development') {
+    const clearRequireCache = require('clear-require-cache');
+    if (req.url.indexOf(config.rootdir) !== -1) {
+      clearRequireCache(routerpath);
+      router = require(routerpath);
+    }
   }
 
   router(req, res, {
