@@ -31,6 +31,9 @@ module.exports = (req, res, opts, cb) => {
       return cb(new Error('renderProps is missing'));
     }
     const chunkNames = routes.getChunkNames(renderProps.location);
+    const stylesheets = [
+      `<link href="${config.rootdir}${assets[`${appName}.css`]}" rel="stylesheet" />`,
+    ];
     const javascripts = [
       `<script src="${config.rootdir}${assets[`${appName}.js`]}"></script>`,
     ]
@@ -40,6 +43,7 @@ module.exports = (req, res, opts, cb) => {
     .concat([
       `<script>window[${JSON.stringify(appName)}](${JSON.stringify(store.getState())});</script>`,
     ]);
+
     const el = createElement(App, { store, router: renderProps });
     const appHtml = ReactDOMServer.renderToString(el);
     const html = `<!doctype html>
@@ -47,6 +51,7 @@ module.exports = (req, res, opts, cb) => {
   <head>
     <meta charset="utf-8" />
     <title>webpack-bbq</title>
+    ${stylesheets.join('\n    ')}
   </head>
   <body>
     <div id="${appName}">${appHtml}</div>

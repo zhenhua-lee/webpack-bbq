@@ -6,6 +6,8 @@ import { compose, applyMiddleware, createStore, combineReducers } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
 
+require('bootstrap/dist/css/bootstrap.css');
+
 import App from './App';
 import routes from './routes';
 import reducers from './reducers';
