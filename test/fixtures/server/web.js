@@ -30,9 +30,11 @@ module.exports = (req, res, opts, cb) => {
     if (!renderProps) {
       return cb(new Error('renderProps is missing'));
     }
+    const chunkName = 'web/peanut';
     const javascripts = [
-      `<script>window.initialState = ${JSON.stringify(store.getState())}</script>`,
       `<script src="${config.rootdir}${assets[`${appName}.js`]}"></script>`,
+      `<script src="${config.rootdir}${assets[`${chunkName}.js`]}"></script>`,
+      `<script>window[${JSON.stringify(appName)}](${JSON.stringify(store.getState())});</script>`,
     ];
     const el = createElement(App, { store, router: renderProps });
     const appHtml = ReactDOMServer.renderToString(el);

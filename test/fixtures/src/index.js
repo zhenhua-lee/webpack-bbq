@@ -14,19 +14,18 @@ import askForReduxDevTools from './askForReduxDevTools';
 const rootReducer = combineReducers(xtend(reducers, {
   routing: routerReducer,
 }));
-console.info(window.initialState)
-const store = createStore(
-  rootReducer,
-  // 这里是一个约定
-  window.initialState,
-  compose(
+
+export default (initialState) => {
+  const store = createStore(rootReducer, initialState, compose(
     applyMiddleware(thunkMiddleware, routerMiddleware(history)),
     // https://github.com/zalmoxisus/redux-devtools-extension
     // https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
     window.devToolsExtension ? window.devToolsExtension() : askForReduxDevTools
-  )
-);
-const history = syncHistoryWithStore(browserHistory, store);
-const router = { history, routes };
-
-ReactDOM.render(createElement(App, { store, router }), document.getElementById(store.getState().appName));
+  ));
+  const history = syncHistoryWithStore(browserHistory, store);
+  const router = { history, routes };
+  ReactDOM.render(
+    createElement(App, { store, router }),
+    document.getElementById(store.getState().appName)
+  );
+};

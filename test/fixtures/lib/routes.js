@@ -8,18 +8,14 @@ var _WebContainer = require('./WebContainer');
 
 var _WebContainer2 = _interopRequireDefault(_WebContainer);
 
-var _PeaNut = require('./PeaNut');
-
-var _PeaNut2 = _interopRequireDefault(_PeaNut);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
   path: '/web',
   indexRoute: _WebIndexRoute2.default,
   component: _WebContainer2.default,
-  childRoutes: [{
-    path: 'peanut',
-    component: _PeaNut2.default
-  }]
+  getChildRoutes: function getChildRoutes(location, callback) {
+    // TODO 需要一个约定？ 或者 bundle-loader 来解救？
+    callback(null, require('./peanut.routes'));
+  }
 };

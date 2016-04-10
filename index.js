@@ -1,4 +1,5 @@
 'use strict';
+const qs = require('querystring');
 const path = require('path');
 
 const xtend = require('xtend');
@@ -42,6 +43,10 @@ function bbq(config) {
     plugins.push(new webpack.optimize.UglifyJsPlugin());
   }
 
+  const exposeEntryLoader = {
+    test: srcpath,
+    loader: `expose-loader?${appName}`,
+  };
   const urlLoader = {
     loader: 'url-loader',
     query: {
@@ -60,18 +65,21 @@ function bbq(config) {
     query: xtend(urlLoader.query, { limit: 25000 }),
   });
   const loaders = (target) => {
+    let babelquery = {
+      'presets[]': ['react', 'es2015'],
+      'plugins[]': ['transform-object-rest-spread', 'add-module-exports'],
+    };
+    if (target === 'node') {
+      babelquery['plugins[]'].push('transform-ensure-ignore');
+    }
+    babelquery = qs.stringify(babelquery, null, null, {
+      encodeURIComponent: (s) => (s)
+    });
     const jsLoader = {
       test: /\.js$/,
       include: `${config.basedir}/src/`,
-      loader: 'babel-loader',
-      query: {
-        presets: ['react', 'es2015'],
-        plugins: ['transform-object-rest-spread', 'add-module-exports'],
-      },
+      loaders: [`babel-loader?${babelquery}`],
     };
-    if (target === 'node') {
-      jsLoader.query.plugins.push('transform-ensure-ignore');
-    }
     const cssloaderlocals =
       'css-loader/locals?modules&localIdentName=[name]__[local]___[hash:base64:5]';
     const externalCssLoader = {
@@ -98,6 +106,7 @@ function bbq(config) {
     };
 
     return [
+      exposeEntryLoader,
       jsLoader,
       externalCssLoader,
       globalCssLoader,
@@ -135,6 +144,7 @@ function bbq(config) {
     context: config.basedir,
     debug,
     entry,
+    target: 'node',
     output: xtend(output, {
       path: `${config.outputdir}/SHOULD_NOT_EXISTS_DIRECTORY`,
     }),

@@ -1,13 +1,12 @@
 import WebIndexRoute from './WebIndexRoute';
 import WebContainer from './WebContainer';
-import PeaNut from './PeaNut';
 
 module.exports = {
   path: '/web',
   indexRoute: WebIndexRoute,
   component: WebContainer,
-  childRoutes: [{
-    path: 'peanut',
-    component: PeaNut,
-  }],
+  getChildRoutes: (location, callback) => {
+    // TODO 需要一个约定？ 或者 bundle-loader 来解救？
+    require.ensure([], () => callback(null, require('./peanut.routes')), 'web/peanut');
+  },
 };

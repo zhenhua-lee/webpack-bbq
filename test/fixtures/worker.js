@@ -17,7 +17,7 @@ const onStats = (err, stats) => {
     modules: false,
     chunks: false,
     reasons: false,
-    errorDetails: false,
+    errorDetails: true,
     chunkOrigins: false,
   }));
 };
