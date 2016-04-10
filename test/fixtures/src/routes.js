@@ -3,7 +3,7 @@ import WebContainer from './WebContainer';
 
 module.exports = {
   path: '/web',
-  indexRoute: WebIndexRoute,
+  indexRoute: { component: WebIndexRoute },
   component: WebContainer,
   getChildRoutes: (location, callback) => {
     // TODO 需要一个约定？ 或者 bundle-loader 来解救？

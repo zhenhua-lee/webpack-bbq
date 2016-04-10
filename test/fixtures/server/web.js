@@ -41,7 +41,7 @@ module.exports = (req, res, opts, cb) => {
     const html = `<!doctype html>
 <html>
   <head>
-    <meta charSet="utf-8" />
+    <meta charset="utf-8" />
     <title>webpack-bbq</title>
   </head>
   <body>

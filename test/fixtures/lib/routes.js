@@ -12,7 +12,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 module.exports = {
   path: '/web',
-  indexRoute: _WebIndexRoute2.default,
+  indexRoute: { component: _WebIndexRoute2.default },
   component: _WebContainer2.default,
   getChildRoutes: function getChildRoutes(location, callback) {
     // TODO 需要一个约定？ 或者 bundle-loader 来解救？
