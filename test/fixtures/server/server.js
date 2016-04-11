@@ -1,7 +1,6 @@
 'use strict';
 const http = require('http');
 
-const appName = require('./appName');
 const port = require('./port');
 const config = require('../config');
 const routerpath = require.resolve('./router');
@@ -16,9 +15,7 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  router(req, res, {
-    appName,
-  }, (err) => {
+  router(req, res, {}, (err) => {
     if (err) {
       console.error(err.stack || err.message);
       // use your own custom error serialization.

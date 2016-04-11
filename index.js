@@ -9,6 +9,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
 const libify = require.resolve('webpack-libify');
 
+const expose = (filename, basedir) => {
+  const extname = path.extname(filename);
+  const relname = path.relative(basedir, filename);
+  return path.join(path.dirname(relname), path.basename(relname, extname));
+}
+
 const bbq = (config) => (client, server) => {
   client = defined(client, {});
   server = defined(server, {});
@@ -28,18 +34,13 @@ const bbq = (config) => (client, server) => {
   // 应用名 (appName)
   // 通过 ${basedir}/src/ 获取主文件，index.js ？是否会有其他的可能？
   const srcpath = require.resolve(`${config.basedir}/src/`);
-  let appName = path.relative(`${config.basedir}/src/`, srcpath);
-  appName = path.join(path.dirname(appName), path.basename(appName, path.extname(appName)));
+  const appName = expose(srcpath, `${config.basedir}/src/`);
   const entry = { [appName]: srcpath };
 
   // configuration - entry
   // shared
-  // entry 必须我们指定!
-  if (client.entry || server.entry) {
-    throw new Error('entry SHOULD NOT BE specified');
-  }
-  client.entry = entry;
-  server.entry = entry;
+  client.entry = defined(client.entry, entry);
+  server.entry = defined(server.entry, entry);
 
   // 开发环境
   const debug = process.env.NODE_ENV === 'development';
@@ -151,13 +152,22 @@ const bbq = (config) => (client, server) => {
     const styleLoader = {
       test: /\.css$/,
       include: `${config.basedir}/src/`,
+      exclude: function (filepath) {
+        return path.basename(filepath).indexOf('.global.css') !== -1;
+      },
       loaders: target === 'web' ? [
         'style-loader',
         'css-loader?modules&localIdentName=[name]__[local]___[hash:base64:5]',
       ] : [csslocals],
     };
 
+    const jsonLoader = {
+      test: /\.json$/,
+      loader: 'json-loader',
+    };
+
     const loaders = [
+      jsonLoader,
       jsLoader,
       externalCssLoader,
       globalCssLoader,

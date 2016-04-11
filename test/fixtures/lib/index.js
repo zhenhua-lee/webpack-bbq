@@ -45,6 +45,7 @@ var _askForReduxDevTools2 = _interopRequireDefault(_askForReduxDevTools);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 require('bootstrap/dist/css/bootstrap.css');
+require('./web.global.css');
 
 var rootReducer = (0, _redux.combineReducers)((0, _xtend2.default)(_reducers2.default, {
   routing: _reactRouterRedux.routerReducer

@@ -7,6 +7,7 @@ import thunkMiddleware from 'redux-thunk';
 import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
 
 require('bootstrap/dist/css/bootstrap.css');
+require('./web.global.css');
 
 import App from './App';
 import routes from './routes';
