@@ -55,7 +55,7 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.14",
-    "webpack-bbq-manifest-generator": "^1.0.0",
+    "webpack-bbq-manifest-generator": "^1.0.1",
     "webpack-libify": "^1.0.0",
     "xtend": "^4.0.1"
   }
