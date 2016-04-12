@@ -15,6 +15,14 @@ const expose = (filename, basedir) => {
   return path.join(path.dirname(relname), path.basename(relname, extname));
 }
 
+/**
+ * config.basedir
+ * config.outputdir
+ * config.rootdir
+ *
+ * client
+ * server
+ */
 const bbq = (config) => (client, server) => {
   client = defined(client, {});
   server = defined(server, {});
@@ -30,17 +38,34 @@ const bbq = (config) => (client, server) => {
   client.context = context;
   server.context = context;
 
-  // 主文件 (entry)
-  // 应用名 (appName)
-  // 通过 ${basedir}/src/ 获取主文件，index.js ？是否会有其他的可能？
-  const srcpath = require.resolve(`${config.basedir}/src/`);
-  const appName = expose(srcpath, `${config.basedir}/src/`);
-  const entry = { [appName]: srcpath };
+  const getEntry = (filepath) => {
+    const appName = expose(filepath, `${config.basedir}/src/`);
+    return { [appName]: filepath };
+  }
 
+  // 主文件 (entry)
+  // 应用名 (clientAppName)
+  // 通过 ${basedir}/src/ 获取主文件，index.js ？是否会有其他的可能？
   // configuration - entry
   // shared
-  client.entry = defined(client.entry, entry);
-  server.entry = defined(server.entry, entry);
+  if (client.entry) {
+    if (typeof client.entry === 'string') {
+      client.entry = getEntry(client.entry);
+    }
+  } else {
+    client.entry = getEntry(require.resolve(`${config.basedir}/src/`));
+  }
+
+  const clientAppName = Object.keys(client.entry)[0];
+  const clientEntryFilepath = client.entry[clientAppName];
+
+  if (server.entry) {
+    if (typeof server.entry === 'string') {
+      server.entry = getEntry(server.entry);
+    }
+  } else {
+    server.entry = client.entry;
+  }
 
   // 开发环境
   const debug = process.env.NODE_ENV === 'development';
@@ -101,8 +126,8 @@ const bbq = (config) => (client, server) => {
   // supported targets: web, node
   const getLoaders = (target) => {
     const exposeEntryLoader = {
-      test: srcpath,
-      loader: `expose-loader?${appName}`,
+      test: clientEntryFilepath,
+      loader: `expose-loader?${clientAppName}`,
     };
 
     const urlLoader = `url-loader?name=${bundlename}`;
