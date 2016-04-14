@@ -4,6 +4,7 @@ const path = require('path');
 
 const defined = require('defined');
 const xtend = require('xtend');
+const resolve = require('resolve');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
@@ -38,7 +39,8 @@ const bbq = (config) => (client, server) => {
   client.context = context;
   server.context = context;
 
-  const getEntry = (filepath) => {
+  const getEntry = (id) => {
+    const filepath = resolve.sync(id, { basedir: config.basedir })
     const appName = expose(filepath, `${config.basedir}/src/`);
     return { [appName]: filepath };
   }
@@ -53,7 +55,7 @@ const bbq = (config) => (client, server) => {
       client.entry = getEntry(client.entry);
     }
   } else {
-    client.entry = getEntry(require.resolve(`${config.basedir}/src/`));
+    client.entry = getEntry(`${config.basedir}/src/`);
   }
 
   const clientAppName = Object.keys(client.entry)[0];
