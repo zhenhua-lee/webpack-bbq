@@ -16,6 +16,27 @@ const expose = (filename, basedir) => {
   return path.join(path.dirname(relname), path.basename(relname, extname));
 }
 
+function ShouldNotEmit() {}
+ShouldNotEmit.prototype.apply =
+  (compiler) => compiler.plugin('should-emit', () => false);
+
+
+function NamedStats() {}
+NamedStats.prototype.apply = function(compiler) {
+  compiler.plugin('done', function(stats) {
+    const toString = stats.toString;
+    stats.toString = function(options) {
+	    const useColors = defined(options.colors, false);
+      const bold = (str) => {
+        if (useColors) return `\u001b[1m${str}\u001b[22m`;
+        else return str;
+      };
+      const name = this.compilation.options.name.toUpperCase();
+      return `COMPILER NAME: ${bold(name)}\n${toString.apply(this, arguments)}`;
+    };
+  });
+};
+
 /**
  * config.basedir
  * config.outputdir
@@ -27,6 +48,10 @@ const expose = (filename, basedir) => {
 const bbq = (config) => (client, server) => {
   client = defined(client, {});
   server = defined(server, {});
+
+  // 添加 name
+  client.name = defined(client.name, 'client');
+  server.name = defined(server.name, 'server');
 
   const context = config.basedir;
 
@@ -102,6 +127,7 @@ const bbq = (config) => (client, server) => {
 
   // plugins
   const plugins = [
+    new NamedStats(),
     new webpack.optimize.DedupePlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
@@ -234,10 +260,6 @@ const bbq = (config) => (client, server) => {
 
   // server land
   
-  function ShouldNotEmit() {}
-  ShouldNotEmit.prototype.apply =
-    (compiler) => compiler.plugin('should-emit', () => false);
-
   const postLoaders = [{ loader: libify }];
 
   // configuration - target
@@ -260,7 +282,7 @@ const bbq = (config) => (client, server) => {
   });
 
   // configuration - plugins
-  server.plugins = [new ShouldNotEmit()].concat(server.plugins).filter(v => v);
+  server.plugins = [new ShouldNotEmit(), new NamedStats()].concat(server.plugins).filter(v => v);
 
   return [
     client,
@@ -268,4 +290,6 @@ const bbq = (config) => (client, server) => {
   ];
 };
 
+bbq.NamedStats = NamedStats;
+bbq.ShouldNotEmit = ShouldNotEmit;
 module.exports = bbq;
