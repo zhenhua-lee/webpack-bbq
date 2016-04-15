@@ -4,7 +4,7 @@ import styles from './index.css';
 
 const WebContaner = (props) => (
   <div className={styles.js}>
-    Web Contaner
+    <div className={styles.css}>Web Contaner</div>
     {props.children}
   </div>
 );

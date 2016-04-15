@@ -18,7 +18,11 @@ var WebContaner = function WebContaner(props) {
   return _react2.default.createElement(
     'div',
     { className: _index2.default.js },
-    'Web Contaner',
+    _react2.default.createElement(
+      'div',
+      { className: _index2.default.css },
+      'Web Contaner'
+    ),
     props.children
   );
 };
