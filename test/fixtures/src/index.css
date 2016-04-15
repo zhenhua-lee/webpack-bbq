@@ -1,3 +1,7 @@
 .js {
     background-color: skyblue;
+
+    & .css {
+        color: white;
+    }
 }

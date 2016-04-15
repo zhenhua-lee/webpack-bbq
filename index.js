@@ -4,48 +4,26 @@ const path = require('path');
 
 const defined = require('defined');
 const xtend = require('xtend');
+const warning = require('warning');
 const resolve = require('resolve');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
 const libify = require.resolve('webpack-libify');
 
-const expose = (filename, basedir) => {
-  const extname = path.extname(filename);
-  const relname = path.relative(basedir, filename);
-  return path.join(path.dirname(relname), path.basename(relname, extname));
-}
-
-function ShouldNotEmit() {}
-ShouldNotEmit.prototype.apply =
-  (compiler) => compiler.plugin('should-emit', () => false);
-
-
-function NamedStats() {}
-NamedStats.prototype.apply = function(compiler) {
-  compiler.plugin('done', function(stats) {
-    const toString = stats.toString;
-    stats.toString = function(options) {
-	    const useColors = defined(options.colors, false);
-      const bold = (str) => {
-        if (useColors) return `\u001b[1m${str}\u001b[22m`;
-        else return str;
-      };
-      const name = this.compilation.options.name.toUpperCase();
-      return `COMPILER NAME: ${bold(name)}\n${toString.apply(this, arguments)}`;
-    };
-  });
-};
-
 /**
  * config.basedir
  * config.outputdir
- * config.rootdir
+ * config.publicPath
  *
  * client
  * server
  */
 const bbq = (config) => (client, server) => {
+  warning(
+    config.rootdir === undefined,
+    'config.rootdir was deprecated, please use config.publicPath instead'
+  );
   client = defined(client, {});
   server = defined(server, {});
 
@@ -71,7 +49,6 @@ const bbq = (config) => (client, server) => {
   }
 
   // 主文件 (entry)
-  // 应用名 (clientAppName)
   // 通过 ${basedir}/src/ 获取主文件，index.js ？是否会有其他的可能？
   // configuration - entry
   // shared
@@ -82,9 +59,6 @@ const bbq = (config) => (client, server) => {
   } else {
     client.entry = getEntry(`${config.basedir}/src/`);
   }
-
-  const clientAppName = Object.keys(client.entry)[0];
-  const clientEntryFilepath = client.entry[clientAppName];
 
   if (server.entry) {
     if (typeof server.entry === 'string') {
@@ -153,10 +127,12 @@ const bbq = (config) => (client, server) => {
   // get loaders for specified target
   // supported targets: web, node
   const getLoaders = (target) => {
-    const exposeEntryLoader = {
-      test: clientEntryFilepath,
-      loader: `expose-loader?${clientAppName}`,
-    };
+    const exposeEntryLoaders = Object
+    .keys(client.entry)
+    .map(name => ({
+      test: resolve.sync(client.entry[name], { basedir: config.basedir }),
+      loader: `expose-loader?${name}`,
+    }));
 
     const urlLoader = `url-loader?name=${bundlename}`;
     const svgLoader = {
@@ -196,22 +172,26 @@ const bbq = (config) => (client, server) => {
       loader: target === 'web' ?
         ExtractTextPlugin.extract('css-loader') : csslocals,
     };
+    const globalCssRe = /\.global\.css$/
     const globalCssLoader = {
-      test: /\.global\.css$/,
+      test: globalCssRe,
       include: `${config.basedir}/src/`,
-      loader: target === 'web' ?
-        ExtractTextPlugin.extract(['css-loader']) : csslocals,
+      loaders: target === 'web' ?
+        ExtractTextPlugin.extract(['css-loader', 'postcss-loader']).split('!') :
+        [csslocals, 'postcss-loader'],
     };
     const styleLoader = {
       test: /\.css$/,
       include: `${config.basedir}/src/`,
-      exclude: function (filepath) {
-        return path.basename(filepath).indexOf('.global.css') !== -1;
-      },
+      exclude: (filepath) => globalCssRe.test(path.basename(filepath)),
       loaders: target === 'web' ? [
         'style-loader',
         'css-loader?modules&localIdentName=[name]__[local]___[hash:base64:5]',
-      ] : [csslocals],
+        'postcss-loader',
+      ] : [
+        csslocals,
+        'postcss-loader',
+      ],
     };
 
     const jsonLoader = {
@@ -230,9 +210,7 @@ const bbq = (config) => (client, server) => {
       imagesLoader,
     ];
     if (target === 'web') {
-      return [
-        exposeEntryLoader,
-      ].concat(loaders);
+      return exposeEntryLoaders.concat(loaders);
     }
     return loaders;
   };
@@ -250,7 +228,7 @@ const bbq = (config) => (client, server) => {
     filename,
     chunkFilename: filename,
     path: config.outputdir,
-    publicPath: config.rootdir,
+    publicPath: defined(config.publicPath, config.rootdir),
   });
 
   // configuration - output
@@ -289,6 +267,32 @@ const bbq = (config) => (client, server) => {
     server,
   ];
 };
+
+function ShouldNotEmit() {}
+ShouldNotEmit.prototype.apply =
+  (compiler) => compiler.plugin('should-emit', () => false);
+
+function NamedStats() {}
+NamedStats.prototype.apply = function(compiler) {
+  compiler.plugin('done', function(stats) {
+    const toString = stats.toString;
+    stats.toString = function(options) {
+	    const useColors = defined(options.colors, false);
+      const bold = (str) => {
+        if (useColors) return `\u001b[1m${str}\u001b[22m`;
+        else return str;
+      };
+      const name = this.compilation.options.name;
+      return `Compiler Name: ${bold(name)}\n${toString.apply(this, arguments)}`;
+    };
+  });
+};
+
+function expose(filename, basedir) {
+  const extname = path.extname(filename);
+  const relname = path.relative(basedir, filename);
+  return path.join(path.dirname(relname), path.basename(relname, extname));
+}
 
 bbq.NamedStats = NamedStats;
 bbq.ShouldNotEmit = ShouldNotEmit;
