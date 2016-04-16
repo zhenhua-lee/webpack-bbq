@@ -1,2 +1,8 @@
 {
+  "index.js": "index.bundle.js",
+  "index.css": "index.bundle.css",
+  "web.js": "web.bundle.js",
+  "peanut.js": "peanut.bundle.js",
+  "m.js": "m.bundle.js",
+  "hare.js": "hare.bundle.js"
 }

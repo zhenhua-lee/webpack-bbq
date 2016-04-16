@@ -22,6 +22,7 @@
   "homepage": "https://github.com/wenbing/webpack-bbq#readme",
   "devDependencies": {
     "@mtfe/expose": "^1.1.1",
+    "basscss": "^8.0.1",
     "bootstrap": "^3.3.6",
     "bundle-loader": "^0.5.4",
     "clear-require-cache": "^1.0.0",

@@ -15,7 +15,7 @@ hash.set('/web/*', function (initialState) {
   require('./web')(initialState);
 });
 hash.set('/m/*', function (initialState) {
-  require('./m')(initialState);
+  require('basscss/css/basscss.css'), require('./m')(initialState);
 });
 hash.set('/hare/*', function (initialState) {
   require('./hare')(initialState);
