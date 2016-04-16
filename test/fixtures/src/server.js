@@ -6,10 +6,11 @@ import thunkMiddleware from 'redux-thunk';
 import expose from '@mtfe/expose';
 
 import config from '../config';
+import revisions from '../app-revisions.json';
 import App from './App';
 import routes from './routes';
 import reducers from './reducers';
-import assets from '../app-revisions.json';
+import getChunkNames from './getChunkNames';
 
 const rootReducer = combineReducers(reducers);
 const storeEnhancer = applyMiddleware(thunkMiddleware);
@@ -35,15 +36,15 @@ export default (location, cb) => {
     const el = createElement(App, { store, router: renderProps });
     const appHtml = ReactDOMServer.renderToString(el);
 
-    const chunkNames = routes.getChunkNames(renderProps.location);
+    const chunkNames = getChunkNames(renderProps.location);
     const stylesheets = [
-      `<link href="${config.rootdir}${assets[`${appName}.css`]}" rel="stylesheet" />`,
+      `<link href="${config.rootdir}${revisions[`${appName}.css`]}" rel="stylesheet" />`,
     ];
     const javascripts = [
-      `<script src="${config.rootdir}${assets[`${appName}.js`]}"></script>`,
+      `<script src="${config.rootdir}${revisions[`${appName}.js`]}"></script>`,
     ]
     .concat(chunkNames.map((chunkName) => (
-      `<script src="${config.rootdir}${assets[`${chunkName}.js`]}"></script>`
+      `<script src="${config.rootdir}${revisions[`${chunkName}.js`]}"></script>`
     )))
     .concat([
       `<script>window[${JSON.stringify(appName)}](${JSON.stringify(store.getState())});</script>`,

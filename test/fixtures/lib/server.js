@@ -28,6 +28,10 @@ var _config = require('../config');
 
 var _config2 = _interopRequireDefault(_config);
 
+var _appRevisions = require('../app-revisions.json');
+
+var _appRevisions2 = _interopRequireDefault(_appRevisions);
+
 var _App = require('./App');
 
 var _App2 = _interopRequireDefault(_App);
@@ -40,9 +44,9 @@ var _reducers = require('./reducers');
 
 var _reducers2 = _interopRequireDefault(_reducers);
 
-var _appRevisions = require('../app-revisions.json');
+var _getChunkNames = require('./getChunkNames');
 
-var _appRevisions2 = _interopRequireDefault(_appRevisions);
+var _getChunkNames2 = _interopRequireDefault(_getChunkNames);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -70,7 +74,7 @@ exports.default = function (location, cb) {
     var el = (0, _react.createElement)(_App2.default, { store: store, router: renderProps });
     var appHtml = _server2.default.renderToString(el);
 
-    var chunkNames = _routes2.default.getChunkNames(renderProps.location);
+    var chunkNames = (0, _getChunkNames2.default)(renderProps.location);
     var stylesheets = ['<link href="' + _config2.default.rootdir + _appRevisions2.default[appName + '.css'] + '" rel="stylesheet" />'];
     var javascripts = ['<script src="' + _config2.default.rootdir + _appRevisions2.default[appName + '.js'] + '"></script>'].concat(chunkNames.map(function (chunkName) {
       return '<script src="' + _config2.default.rootdir + _appRevisions2.default[chunkName + '.js'] + '"></script>';

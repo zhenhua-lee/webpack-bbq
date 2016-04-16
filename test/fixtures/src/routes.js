@@ -24,23 +24,4 @@ const routes = [{
   },
 }];
 
-routes.getChunkNames = (location) => {
-  const hash = require('./hash');
-  const route = hash.get(location.pathname);
-  const chunkNames = [];
-  if (route.src === '/web/*') {
-    chunkNames.push('web');
-  }
-  if (route.src === '/m/*') {
-    chunkNames.push('m');
-  }
-  if (route.src === '/hare/*') {
-    chunkNames.push('hare');
-  }
-  if (location.pathname.indexOf('/peanut') !== -1) {
-    chunkNames.push('peanut');
-  }
-  return chunkNames;
-}
-
 module.exports = routes;

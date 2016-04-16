@@ -41,7 +41,7 @@ var WebIndexRoute = function WebIndexRoute(props) {
       null,
       _react2.default.createElement(
         _Link2.default,
-        { to: '/web/peanut' },
+        { to: '/' + props.location.pathname.split('/')[1] + '/peanut' },
         'PeaNut'
       )
     ),

@@ -8,12 +8,12 @@ require('./web.global.css');
 
 var hash = require('./hash');
 
-var node = hash.get(location.pathname);
-
-exports.default = function (initialState) {
+var main = function main(initialState) {
+  var node = hash.get(location.pathname);
   if (node.handler) {
-    node.handler(window.initialState);
+    node.handler(initialState);
   }
 };
 
+exports.default = main;
 module.exports = exports['default'];

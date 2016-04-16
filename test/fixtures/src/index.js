@@ -3,10 +3,11 @@ require('./web.global.css');
 
 const hash = require('./hash');
 
-const node = hash.get(location.pathname);
-
-export default (initialState) => {
+const main = (initialState) => {
+  const node = hash.get(location.pathname);
   if (node.handler) {
-    node.handler(window.initialState);
+    node.handler(initialState);
   }
 };
+
+export default main;
