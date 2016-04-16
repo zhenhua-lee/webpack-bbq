@@ -10,6 +10,9 @@ hash.set('/web/*', (initialState) => {
 hash.set('/m/*', (initialState) => {
   require.ensure([], () => require('./m')(initialState), 'm');
 });
+hash.set('/hare/*', (initialState) => {
+  require.ensure([], () => require('./hare')(initialState), 'hare');
+});
 
 export default (initialState) => {
   const node = hash.get(location.pathname);

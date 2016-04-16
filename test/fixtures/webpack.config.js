@@ -8,6 +8,7 @@ module.exports = require('../../')({
   publicPath: config.rootdir,
 })({
   // entry: './src/',
+  // entry: { index: './src/', ['foo/bar']: './src/foo/bar' },
   entry: { index: './src/', ['foo/bar']: './src/foo/bar' },
   postcss: () => [require('postcss-nesting')],
 }, {

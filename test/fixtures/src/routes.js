@@ -6,11 +6,14 @@ const routes = [{
   indexRoute: { component: WebIndexRoute },
   component: WebContainer,
   getChildRoutes: (location, callback) => {
-    // TODO 需要一个约定？ 或者 bundle-loader 来解救？
     require.ensure([], () => callback(null, require('./peanut.routes')), 'web/peanut');
   },
 }, {
   path: '/m',
+  component: WebContainer,
+  indexRoute: { component: WebIndexRoute },
+}, {
+  path: '/hare',
   component: WebContainer,
   indexRoute: { component: WebIndexRoute },
 }];

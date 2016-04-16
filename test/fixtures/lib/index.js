@@ -20,6 +20,9 @@ hash.set('/web/*', function (initialState) {
 hash.set('/m/*', function (initialState) {
   require('./m')(initialState);
 });
+hash.set('/hare/*', function (initialState) {
+  require('./hare')(initialState);
+});
 
 exports.default = function (initialState) {
   var node = hash.get(location.pathname);

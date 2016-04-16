@@ -19,17 +19,31 @@ var WebIndexRoute = function WebIndexRoute(props) {
     'div',
     null,
     _react2.default.createElement(
-      'a',
-      { href: 'https://github.com/wenbing/webpack-bbq' },
-      'webpack-bbq'
+      'p',
+      null,
+      _react2.default.createElement(
+        'a',
+        { href: 'https://github.com/wenbing/webpack-bbq' },
+        'webpack-bbq'
+      )
     ),
-    _react2.default.createElement('br', null),
-    'Web Index',
-    _react2.default.createElement('br', null),
     _react2.default.createElement(
-      _Link2.default,
-      { to: '/web/peanut' },
-      'PeaNut'
+      'pre',
+      null,
+      'props.location: ',
+      JSON.stringify(props.location, function (key, value) {
+        if (key === 'key') return undefined;
+        return value;
+      }, 4)
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      _react2.default.createElement(
+        _Link2.default,
+        { to: '/web/peanut' },
+        'PeaNut'
+      )
     ),
     props.children
   );

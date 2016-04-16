@@ -15,11 +15,14 @@ var routes = [{
   indexRoute: { component: _WebIndexRoute2.default },
   component: _WebContainer2.default,
   getChildRoutes: function getChildRoutes(location, callback) {
-    // TODO 需要一个约定？ 或者 bundle-loader 来解救？
     callback(null, require('./peanut.routes'));
   }
 }, {
   path: '/m',
+  component: _WebContainer2.default,
+  indexRoute: { component: _WebIndexRoute2.default }
+}, {
+  path: '/hare',
   component: _WebContainer2.default,
   indexRoute: { component: _WebIndexRoute2.default }
 }];

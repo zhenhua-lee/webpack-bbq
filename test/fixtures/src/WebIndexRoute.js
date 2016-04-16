@@ -3,11 +3,12 @@ import Link from 'react-router/lib/Link';
 
 const WebIndexRoute = (props) => (
   <div>
-    <a href={`https://github.com/wenbing/webpack-bbq`}>webpack-bbq</a>
-    <br />
-    Web Index
-    <br />
-    <Link to={`/web/peanut`}>PeaNut</Link>
+    <p><a href={`https://github.com/wenbing/webpack-bbq`}>webpack-bbq</a></p>
+    <pre>props.location: {JSON.stringify(props.location, (key, value) => {
+      if (key === 'key') return undefined;
+      return value;
+    }, 4)}</pre>
+    <p><Link to={`/web/peanut`}>PeaNut</Link></p>
     {props.children}
   </div>
 );
