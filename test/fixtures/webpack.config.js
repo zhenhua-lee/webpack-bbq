@@ -11,4 +11,12 @@ module.exports = require('../../')({
   postcss: () => [require('postcss-nesting')],
 }, {
   entry: './src/server',
+  staticRendering: [
+    '/web.html',
+    '/m.html',
+    '/hare.html',
+    '/web/peanut.html',
+    '/m/peanut.html',
+    '/hare/peanut.html',
+  ],
 });

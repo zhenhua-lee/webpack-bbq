@@ -9,4 +9,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 module.exports = [{
   path: 'peanut',
   component: _PeaNut2.default
+}, {
+  path: 'peanut.html',
+  component: _PeaNut2.default
 }];

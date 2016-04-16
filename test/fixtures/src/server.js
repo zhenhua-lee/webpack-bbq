@@ -1,12 +1,11 @@
+import path from 'path';
 import { createElement } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import match from 'react-router/lib/match';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import expose from '@mtfe/expose';
 
 import config from '../config';
-import revisions from '../app-revisions.json';
 import App from './App';
 import routes from './routes';
 import reducers from './reducers';
@@ -16,6 +15,7 @@ const rootReducer = combineReducers(reducers);
 const storeEnhancer = applyMiddleware(thunkMiddleware);
 
 export default (location, cb) => {
+  const revisions = require('../app-revisions.json');
   const appName = expose(require.resolve('../src/'), `${config.basedir}/src/`);
   const initialState = {};
   const store = createStore(rootReducer, initialState, storeEnhancer);
@@ -66,3 +66,9 @@ export default (location, cb) => {
     cb(null, html);
   });
 };
+
+function expose(filename, basedir) {
+  const extname = path.extname(filename);
+  const relname = path.relative(basedir, filename);
+  return path.join(path.dirname(relname), path.basename(relname, extname));
+}

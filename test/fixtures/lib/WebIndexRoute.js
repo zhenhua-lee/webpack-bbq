@@ -14,6 +14,14 @@ var _Link2 = _interopRequireDefault(_Link);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var getName = function getName(pathname) {
+  // /web
+  var name = pathname.split('/')[1];
+  // /web.html
+  name = name.split('.')[0];
+  return name;
+};
+
 var WebIndexRoute = function WebIndexRoute(props) {
   return _react2.default.createElement(
     'div',
@@ -41,7 +49,7 @@ var WebIndexRoute = function WebIndexRoute(props) {
       null,
       _react2.default.createElement(
         _Link2.default,
-        { to: '/' + props.location.pathname.split('/')[1] + '/peanut' },
+        { to: '/' + getName(props.location.pathname) + '/peanut' },
         'PeaNut'
       )
     ),

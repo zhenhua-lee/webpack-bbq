@@ -1,14 +1,18 @@
 'use strict';
 const qs = require('querystring');
+const fs = require('fs');
 const path = require('path');
 
 const defined = require('defined');
 const xtend = require('xtend');
+const map = require('map-async');
 const warning = require('warning');
+const mkdirp = require('mkdirp');
 const resolve = require('resolve');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
+const cleanRequireCache = require('clear-require-cache');
 const libify = require.resolve('webpack-libify');
 
 /**
@@ -28,8 +32,8 @@ const bbq = (config) => (client, server) => {
   server = defined(server, {});
 
   // 添加 name
-  client.name = defined(client.name, 'client');
-  server.name = defined(server.name, 'server');
+  client.name = 'client';
+  server.name = 'server';
 
   const context = config.basedir;
 
@@ -66,6 +70,9 @@ const bbq = (config) => (client, server) => {
     }
   } else {
     server.entry = client.entry;
+  }
+  if (Object.keys(server.entry).length > 1) {
+    throw new Error('server MUST HAVE one entry at most');
   }
 
   // 开发环境
@@ -266,7 +273,12 @@ const bbq = (config) => (client, server) => {
   });
 
   // configuration - plugins
-  server.plugins = [new ShouldNotEmit(), new NamedStats()].concat(server.plugins).filter(v => v);
+  // server only
+  const serverPlugins = [new ShouldNotEmit(), new NamedStats()];
+  if (server.staticRendering && Array.isArray(server.staticRendering)) {
+    serverPlugins.push(new StaticRendering(config, server));
+  }
+  server.plugins = serverPlugins.concat(server.plugins).filter(v => v);
 
   return [
     client,
@@ -283,21 +295,83 @@ NamedStats.prototype.apply = function(compiler) {
   compiler.plugin('done', function(stats) {
     const toString = stats.toString;
     stats.toString = function(options) {
-	    const useColors = defined(options.colors, false);
-      const bold = (str) => {
-        if (useColors) return `\u001b[1m${str}\u001b[22m`;
-        else return str;
-      };
+      const bold = makeBold(defined(options.colors, false))
       const name = this.compilation.options.name;
       return `Compiler Name: ${bold(name)}\n${toString.apply(this, arguments)}`;
     };
   });
 };
 
+function StaticRendering(config, server) {
+  this.config = config;
+  this.server = server;
+  this.logger = config.logger || console;
+}
+StaticRendering.prototype.apply = function (compiler) {
+  const self = this;
+  let logs;
+  compiler.plugin('after-compile', (compilation, callback) => run(callback));
+  compiler.plugin('done', function(stats) {
+    const toString = stats.toString;
+    stats.toString = function(options) {
+      const bold = makeBold(defined(options.colors, false));
+      const srlogs = logs.map((log) => `${log[0]}: ${bold(log[1])}`).join('\n');
+      return `${toString.apply(this, arguments)}\n${srlogs}`;
+    };
+  });
+
+  function run(done) {
+    logs = [];
+    const config = self.config;
+    let entry;
+    entry = self.server.entry[Object.keys(self.server.entry)[0]];
+    entry = get(entry);
+    cleanRequireCache(entry);
+
+    let app; 
+    try { app = require(entry); } catch(err) { return done(err); }
+    if (typeof app !== 'function') {
+      return done(new Error('server.entry MUST BE a function'));
+    }
+    if (app.length !== 2) {
+      return done(new Error('server.entry MUST BE compatible with the style: (props, cb) => cb(null, html)'));
+    }
+
+    map(self.server.staticRendering, (pathname, cb) => {
+      const filepath = `${config.outputdir}${pathname}`;
+      mkdirp(path.dirname(filepath), (err) => {
+        if (err) return cb(err);
+        app(pathname, (err, html) => {
+          if (err) return cb(err);
+          const relpath = path.relative(self.config.outputdir, filepath);
+          logs.push(['StaticRendering', `/${relpath}`]);
+          fs.writeFile(filepath, html, cb);
+        });
+      });
+    }, done);
+  }
+};
+
+function get(file) {
+  const ext = path.extname(file);
+  file = file.replace('/src/', '/lib/');
+  if (ext === '' || (ext !== '.js' && ext !== '.json')) {
+    file = file + '.js';
+  }
+  return file;
+}
+
 function expose(filename, basedir) {
   const extname = path.extname(filename);
   const relname = path.relative(basedir, filename);
   return path.join(path.dirname(relname), path.basename(relname, extname));
+}
+
+function makeBold(useColors) {
+  return (str) => {
+    if (useColors) return `\u001b[1m${str}\u001b[22m`;
+    else return str;
+  };
 }
 
 bbq.NamedStats = NamedStats;

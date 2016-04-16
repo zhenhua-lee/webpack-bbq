@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _react = require('react');
 
 var _server = require('react-dom/server');
@@ -20,17 +24,9 @@ var _reduxThunk = require('redux-thunk');
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-var _expose = require('@mtfe/expose');
-
-var _expose2 = _interopRequireDefault(_expose);
-
 var _config = require('../config');
 
 var _config2 = _interopRequireDefault(_config);
-
-var _appRevisions = require('../app-revisions.json');
-
-var _appRevisions2 = _interopRequireDefault(_appRevisions);
 
 var _App = require('./App');
 
@@ -54,7 +50,8 @@ var rootReducer = (0, _redux.combineReducers)(_reducers2.default);
 var storeEnhancer = (0, _redux.applyMiddleware)(_reduxThunk2.default);
 
 exports.default = function (location, cb) {
-  var appName = (0, _expose2.default)(require.resolve('../src/'), _config2.default.basedir + '/src/');
+  var revisions = require('../app-revisions.json');
+  var appName = expose(require.resolve('../src/'), _config2.default.basedir + '/src/');
   var initialState = {};
   var store = (0, _redux.createStore)(rootReducer, initialState, storeEnhancer);
 
@@ -75,9 +72,9 @@ exports.default = function (location, cb) {
     var appHtml = _server2.default.renderToString(el);
 
     var chunkNames = (0, _getChunkNames2.default)(renderProps.location);
-    var stylesheets = ['<link href="' + _config2.default.rootdir + _appRevisions2.default[appName + '.css'] + '" rel="stylesheet" />'];
-    var javascripts = ['<script src="' + _config2.default.rootdir + _appRevisions2.default[appName + '.js'] + '"></script>'].concat(chunkNames.map(function (chunkName) {
-      return '<script src="' + _config2.default.rootdir + _appRevisions2.default[chunkName + '.js'] + '"></script>';
+    var stylesheets = ['<link href="' + _config2.default.rootdir + revisions[appName + '.css'] + '" rel="stylesheet" />'];
+    var javascripts = ['<script src="' + _config2.default.rootdir + revisions[appName + '.js'] + '"></script>'].concat(chunkNames.map(function (chunkName) {
+      return '<script src="' + _config2.default.rootdir + revisions[chunkName + '.js'] + '"></script>';
     })).concat(['<script>window[' + JSON.stringify(appName) + '](' + JSON.stringify(store.getState()) + ');</script>']);
 
     var html = '<!doctype html>\n<html>\n  <head>\n    <meta charset="utf-8" />\n    <title>webpack-bbq</title>\n    ' + stylesheets.join('\n    ') + '\n  </head>\n  <body>\n    <div id="' + appName + '">' + appHtml + '</div>\n    ' + javascripts.join('\n    ') + '\n  </body>\n</html>\n    ';
@@ -85,4 +82,9 @@ exports.default = function (location, cb) {
   });
 };
 
+function expose(filename, basedir) {
+  var extname = _path2.default.extname(filename);
+  var relname = _path2.default.relative(basedir, filename);
+  return _path2.default.join(_path2.default.dirname(relname), _path2.default.basename(relname, extname));
+}
 module.exports = exports['default'];
