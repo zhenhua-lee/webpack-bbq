@@ -1,10 +1,8 @@
 {
-  "foo/bar.js": "foo/bar.bundle.js",
-  "foo/baz.js": "foo/baz.bundle.js",
   "index.js": "index.bundle.js",
   "index.css": "index.bundle.css",
   "web.js": "web.bundle.js",
-  "web/peanut.js": "web/peanut.bundle.js",
   "m.js": "m.bundle.js",
-  "hare.js": "hare.bundle.js"
+  "hare.js": "hare.bundle.js",
+  "peanut.js": "peanut.bundle.js"
 }

@@ -9,8 +9,9 @@ let router = require(routerpath);
 
 const server = http.createServer((req, res) => {
   if (process.env.NODE_ENV === 'development') {
+    const route = router.hash.get(req.url);
     const clearRequireCache = require('clear-require-cache');
-    if (req.url.indexOf(config.rootdir) !== -1) {
+    if (['/web', '/web/*', '/m', '/m/*', '/hare', '/hare/*'].indexOf(route.src) !== -1) {
       clearRequireCache(routerpath);
       router = require(routerpath);
     }

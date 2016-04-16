@@ -27,7 +27,9 @@ export default (location, cb) => {
       return cb(new Error(`redirectLocation: ${redirectLocation}`));
     }
     if (!renderProps) {
-      return cb(new Error('renderProps is missing'));
+      const rerr = new Error(`match({ location: ${location} }): renderProps is missing`);
+      rerr.statusCode = 404;
+      return cb(rerr);
     }
 
     const el = createElement(App, { store, router: renderProps });

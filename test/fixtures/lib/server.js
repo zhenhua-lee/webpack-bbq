@@ -62,7 +62,9 @@ exports.default = function (location, cb) {
       return cb(new Error('redirectLocation: ' + redirectLocation));
     }
     if (!renderProps) {
-      return cb(new Error('renderProps is missing'));
+      var rerr = new Error('match({ location: ' + location + ' }): renderProps is missing');
+      rerr.statusCode = 404;
+      return cb(rerr);
     }
 
     var el = (0, _react.createElement)(_App2.default, { store: store, router: renderProps });

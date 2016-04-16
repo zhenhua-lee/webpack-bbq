@@ -20,18 +20,36 @@ var routes = [{
 }, {
   path: '/m',
   component: _WebContainer2.default,
-  indexRoute: { component: _WebIndexRoute2.default }
+  indexRoute: { component: _WebIndexRoute2.default },
+  getChildRoutes: function getChildRoutes(location, callback) {
+    callback(null, require('./peanut.routes'));
+  }
 }, {
   path: '/hare',
   component: _WebContainer2.default,
-  indexRoute: { component: _WebIndexRoute2.default }
+  indexRoute: { component: _WebIndexRoute2.default },
+  getChildRoutes: function getChildRoutes(location, callback) {
+    callback(null, require('./peanut.routes'));
+  }
 }];
 
 routes.getChunkNames = function (location) {
-  if (location.pathname.indexOf('/web/') === 0) {
-    return ['web/peanut'];
+  var hash = require('./hash');
+  var route = hash.get(location.pathname);
+  var chunkNames = [];
+  if (route.src === '/web/*') {
+    chunkNames.push('web');
   }
-  return [];
+  if (route.src === '/m/*') {
+    chunkNames.push('m');
+  }
+  if (route.src === '/hare/*') {
+    chunkNames.push('hare');
+  }
+  if (location.pathname.indexOf('/peanut') !== -1) {
+    chunkNames.push('peanut');
+  }
+  return chunkNames;
 };
 
 module.exports = routes;

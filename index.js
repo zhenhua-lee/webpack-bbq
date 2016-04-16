@@ -102,22 +102,21 @@ const bbq = (config) => (client, server) => {
   // plugins
   const plugins = [
     new NamedStats(),
-    new webpack.optimize.DedupePlugin(),
+    new ExtractTextPlugin(cssfilename),
+    new webpack.optimize.CommonsChunkPlugin({
+      filename,
+      children: true,
+      minChunks: defined(client.minChunks, 3),
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
-    new ExtractTextPlugin(cssfilename),
     new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`),
   ];
   if (process.env.NODE_ENV === 'production') {
+    plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin());
   }
-  const minChunks = defined(client.minChunks, 3);
-  plugins.push(new webpack.optimize.CommonsChunkPlugin({
-    filename,
-    children: true,
-    minChunks,
-  }));
 
   // configuration - plugins
   // client only

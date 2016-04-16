@@ -1,22 +1,12 @@
-import httpHash from 'http-hash';
-
 require('bootstrap/dist/css/bootstrap.css');
 require('./web.global.css');
 
-const hash = httpHash();
-hash.set('/web/*', (initialState) => {
-  require.ensure([], () => require('./web')(initialState), 'web');
-});
-hash.set('/m/*', (initialState) => {
-  require.ensure([], () => require('./m')(initialState), 'm');
-});
-hash.set('/hare/*', (initialState) => {
-  require.ensure([], () => require('./hare')(initialState), 'hare');
-});
+const hash = require('./hash');
+
+const node = hash.get(location.pathname);
 
 export default (initialState) => {
-  const node = hash.get(location.pathname);
   if (node.handler) {
-    node.handler(initialState);
+    node.handler(window.initialState);
   }
 };
