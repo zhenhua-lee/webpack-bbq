@@ -9,6 +9,8 @@ router.set('/web', web);
 router.set('/web/*', web);
 router.set('/m', web);
 router.set('/m/*', web);
+router.set('/hare', web);
+router.set('/hare/*', web);
 router.set(`${config.rootdir}*`, st({
   path: config.outputdir,
   url: config.rootdir,
