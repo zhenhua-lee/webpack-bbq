@@ -46,11 +46,11 @@ var _appRevisions2 = _interopRequireDefault(_appRevisions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appName = (0, _expose2.default)(require.resolve('./'), _config2.default.basedir + '/lib');
 var rootReducer = (0, _redux.combineReducers)(_reducers2.default);
 var storeEnhancer = (0, _redux.applyMiddleware)(_reduxThunk2.default);
 
 exports.default = function (location, cb) {
+  var appName = (0, _expose2.default)(require.resolve('../src/'), _config2.default.basedir + '/src/');
   var initialState = {};
   var store = (0, _redux.createStore)(rootReducer, initialState, storeEnhancer);
 

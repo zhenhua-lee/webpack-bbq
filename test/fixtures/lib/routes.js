@@ -10,18 +10,25 @@ var _WebContainer2 = _interopRequireDefault(_WebContainer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-module.exports = {
+var routes = [{
   path: '/web',
   indexRoute: { component: _WebIndexRoute2.default },
   component: _WebContainer2.default,
   getChildRoutes: function getChildRoutes(location, callback) {
     // TODO 需要一个约定？ 或者 bundle-loader 来解救？
     callback(null, require('./peanut.routes'));
-  },
-  getChunkNames: function getChunkNames(location) {
-    if (location.pathname.indexOf('/web/') === 0) {
-      return ['web/peanut'];
-    }
-    return [];
   }
+}, {
+  path: '/m',
+  component: _WebContainer2.default,
+  indexRoute: { component: _WebIndexRoute2.default }
+}];
+
+routes.getChunkNames = function (location) {
+  if (location.pathname.indexOf('/web/') === 0) {
+    return ['web/peanut'];
+  }
+  return [];
 };
+
+module.exports = routes;

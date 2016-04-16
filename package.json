@@ -26,6 +26,7 @@
     "bundle-loader": "^0.5.4",
     "clear-require-cache": "^1.0.0",
     "faucet": "0.0.1",
+    "http-hash": "^2.0.0",
     "http-hash-router": "^1.1.0",
     "postcss-nesting": "^2.3.1",
     "react": "^15.0.1",
@@ -35,6 +36,7 @@
     "react-router-redux": "^4.0.2",
     "redux": "^3.4.0",
     "redux-thunk": "^2.0.1",
+    "rimraf": "^2.5.2",
     "send-data": "^8.0.0",
     "st": "^1.1.0",
     "tape": "^4.5.1"

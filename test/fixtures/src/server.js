@@ -11,11 +11,11 @@ import routes from './routes';
 import reducers from './reducers';
 import assets from '../app-revisions.json';
 
-const appName = expose(require.resolve('./'), `${config.basedir}/lib`);
 const rootReducer = combineReducers(reducers);
 const storeEnhancer = applyMiddleware(thunkMiddleware);
 
 export default (location, cb) => {
+  const appName = expose(require.resolve('../src/'), `${config.basedir}/src/`);
   const initialState = {};
   const store = createStore(rootReducer, initialState, storeEnhancer);
 

@@ -1,5 +1,6 @@
 'use strict';
 const http = require('http');
+const sendHtml = require('send-data/html');
 
 const port = require('./port');
 const config = require('../config');
@@ -17,11 +18,15 @@ const server = http.createServer((req, res) => {
 
   router(req, res, {}, (err) => {
     if (err) {
-      console.error(err.stack || err.message);
-      // use your own custom error serialization.
-      if (!res.finished) {
-        res.statusCode = err.statusCode || 500;
-        res.end(err.message);
+      console.error(err.stack || err.toString());
+      if (res.finished) {
+        return;
+      }
+      res.statusCode = err.statusCode || 500;
+      if (process.env.NODE_ENV === 'development') {
+        sendHtml(req, res, `<pre>${err.stack}</pre>`);
+      } else {
+        sendHtml(req, res, err.toString());
       }
     }
   });

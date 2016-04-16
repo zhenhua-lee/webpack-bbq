@@ -7,6 +7,6 @@ import thunkMiddleware from 'redux-thunk';
 import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-router-redux';
 
 const app = (initialState) =>
-  require.ensure([], () => require('./baz')(initialState), 'foo/baz');
+  require.ensure([], () => require('./foo/baz')(initialState), 'foo/baz');
 
 export default app;

@@ -112,6 +112,14 @@ const bbq = (config) => (client, server) => {
   if (process.env.NODE_ENV === 'production') {
     plugins.push(new webpack.optimize.UglifyJsPlugin());
   }
+  const clientEntryLength = Object.keys(client.entry).length;
+  if (clientEntryLength > 1) {
+    plugins.push(new webpack.optimize.CommonsChunkPlugin({
+      filename,
+      children: true,
+      minChunks: clientEntryLength,
+    }));
+  }
 
   // configuration - plugins
   // client only
@@ -169,8 +177,9 @@ const bbq = (config) => (client, server) => {
     const externalCssLoader = {
       test: /\.css$/,
       include: /\/node_modules\//,
-      loader: target === 'web' ?
-        ExtractTextPlugin.extract('css-loader') : csslocals,
+      loaders: target === 'web' ?
+        ExtractTextPlugin.extract('css-loader').split('!') :
+        [csslocals],
     };
     const globalCssRe = /\.global\.css$/
     const globalCssLoader = {

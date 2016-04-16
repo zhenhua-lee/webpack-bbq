@@ -1,8 +1,13 @@
 if (process.env.NODE_ENV === undefined) {
   process.env.NODE_ENV = 'development';
 }
+const rimraf = require('rimraf');
 const webpack = require('webpack');
+const config = require('./config');
 const webpackConfig = require('./webpack.config');
+
+rimraf.sync(`${config.basedir}/lib/`);
+rimraf.sync(`${config.outputdir}`);
 
 const compiler = webpack(webpackConfig);
 const onStats = (err, stats) => {
