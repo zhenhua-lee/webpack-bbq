@@ -49,7 +49,7 @@ var WebIndexRoute = function WebIndexRoute(props) {
       null,
       _react2.default.createElement(
         _Link2.default,
-        { to: '/' + getName(props.location.pathname) + '/peanut' },
+        { to: '/' + getName(props.location.pathname) + '/peanut.html' },
         'PeaNut'
       )
     ),

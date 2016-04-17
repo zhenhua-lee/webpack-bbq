@@ -16,7 +16,7 @@ const WebIndexRoute = (props) => (
       if (key === 'key') return undefined;
       return value;
     }, 4)}</pre>
-    <p><Link to={`/${getName(props.location.pathname)}/peanut`}>PeaNut</Link></p>
+    <p><Link to={`/${getName(props.location.pathname)}/peanut.html`}>PeaNut</Link></p>
     {props.children}
   </div>
 );

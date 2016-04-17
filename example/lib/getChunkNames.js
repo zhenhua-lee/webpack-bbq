@@ -17,7 +17,8 @@ var getChunkNames = function getChunkNames(location) {
   if (route.src === '/hare/*') {
     chunkNames.push('hare');
   }
-  if (location.pathname.split('/')[2] === 'peanut') {
+  var peanut = location.pathname.split('/')[2];
+  if (peanut === 'peanut' || peanut === 'peanut.html') {
     chunkNames.push('peanut');
   }
   return chunkNames;

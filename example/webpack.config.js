@@ -2,7 +2,7 @@ const path = require('path');
 
 const config = require('./config');
 
-module.exports = require('../../')({
+module.exports = require('../')({
   basedir: config.basedir,
   outputdir: config.outputdir,
   publicPath: config.rootdir,

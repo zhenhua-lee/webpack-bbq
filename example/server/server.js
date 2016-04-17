@@ -11,7 +11,11 @@ const server = http.createServer((req, res) => {
   if (process.env.NODE_ENV === 'development') {
     const route = router.hash.get(req.url);
     const clearRequireCache = require('clear-require-cache');
-    if (['/web', '/web/*', '/m', '/m/*', '/hare', '/hare/*'].indexOf(route.src) !== -1) {
+    if ([
+      '/web', '/web.html', '/web/*',
+      '/m', '/m.html', '/m/*',
+      '/hare', '/hare.html', '/hare/*',
+    ].indexOf(route.src) !== -1) {
       clearRequireCache(routerpath);
       router = require(routerpath);
     }

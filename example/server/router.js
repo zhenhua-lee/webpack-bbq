@@ -1,10 +1,16 @@
 const httpHashRouter = require('http-hash-router');
+const httpHashMocker = require('http-hash-mocker');
 const st = require('st')
 
 const config = require('../config');
 const web = require('./web');
 
+const mocker = httpHashMocker([
+], { basedir: config.basedir });
+
 const router = httpHashRouter();
+router.set('/api/*', mocker);
+// serverRendering
 // router.set('/web', web);
 // router.set('/web.html', web);
 // router.set('/web/*', web);
