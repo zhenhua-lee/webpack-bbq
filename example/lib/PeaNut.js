@@ -24,7 +24,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var fetchPeanutFoo = function fetchPeanutFoo(_ref) {
+var _fetchPeanutFoo = function _fetchPeanutFoo(_ref) {
   var request = _ref.request;
   var dispatch = _ref.dispatch;
   var headers = _ref.headers;
@@ -64,15 +64,27 @@ var PeaNut = function (_Component) {
   }
 
   _createClass(PeaNut, [{
-    key: 'handleClick',
-    value: function handleClick() {
-      fetchPeanutFoo({
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (!this.props.foo) {
+        this.fetchPeanutFoo();
+      }
+    }
+  }, {
+    key: 'fetchPeanutFoo',
+    value: function fetchPeanutFoo() {
+      _fetchPeanutFoo({
         request: _xhrRequest2.default,
         dispatch: this.props.dispatch,
         headers: {
           'x-requested-with': 'XMLHttpRequest'
         }
       });
+    }
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      this.fetchPeanutFoo();
     }
   }, {
     key: 'render',
@@ -98,7 +110,7 @@ var PeaNut = function (_Component) {
   return PeaNut;
 }(_react.Component);
 
-PeaNut.getInitialData = fetchPeanutFoo;
+PeaNut.getInitialData = _fetchPeanutFoo;
 
 exports.default = (0, _reactRedux.connect)(function (state) {
   return {

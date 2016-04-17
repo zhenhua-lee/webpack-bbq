@@ -24,7 +24,13 @@ class PeaNut extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
+  componentDidMount() {
+    if (!this.props.foo) {
+      this.fetchPeanutFoo();
+    }
+  }
+
+  fetchPeanutFoo() {
     fetchPeanutFoo({
       request: xhrRequest,
       dispatch: this.props.dispatch,
@@ -32,6 +38,10 @@ class PeaNut extends Component {
         'x-requested-with': 'XMLHttpRequest',
       },
     });
+  }
+
+  handleClick() {
+    this.fetchPeanutFoo();
   }
 
   render() {
