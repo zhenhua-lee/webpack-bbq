@@ -12,7 +12,7 @@ const resolve = require('resolve');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
-const cleanRequireCache = require('clear-require-cache');
+const clearRequireCache = require('clear-require-cache');
 const libify = require.resolve('webpack-libify');
 
 /**
@@ -326,7 +326,7 @@ StaticRendering.prototype.apply = function (compiler) {
     let entry;
     entry = self.server.entry[Object.keys(self.server.entry)[0]];
     entry = get(entry);
-    cleanRequireCache(entry);
+    clearRequireCache(entry);
 
     let app; 
     try { app = require(entry); } catch(err) { return done(err); }
