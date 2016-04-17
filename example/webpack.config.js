@@ -12,11 +12,11 @@ module.exports = require('../')({
 }, {
   entry: './src/server',
   staticRendering: [
-    '/web.html',
-    '/m.html',
-    '/hare.html',
+    // '/web.html',
+    // '/m.html',
+    // '/hare.html',
     '/web/peanut.html',
-    '/m/peanut.html',
-    '/hare/peanut.html',
+    // '/m/peanut.html',
+    // '/hare/peanut.html',
   ],
 });
