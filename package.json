@@ -23,7 +23,6 @@
   "devDependencies": {
     "basscss": "^8.0.1",
     "bootstrap": "^3.3.6",
-    "clear-require-cache": "^1.0.0",
     "faucet": "0.0.1",
     "http-hash": "^2.0.0",
     "http-hash-mocker": "^1.1.2",
@@ -44,6 +43,7 @@
     "xhr-request": "^1.0.1"
   },
   "dependencies": {
+    "clear-require-cache": "^1.0.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-plugin-transform-ensure-ignore": "^0.1.0",
