@@ -44,7 +44,14 @@ export default (location, callback) => {
         dispatch: store.dispatch
       }, cb);
     }, (err) => {
-      callback(null, renderToString(store, renderProps));
+      if (err) return callback(err);
+      try {
+        const el = createElement(App, { store, router });
+        const appHtml = ReactDOMServer.renderToString(el);
+        callback(null, renderToHTML(store, renderProps, appHtml));
+      } catch (err) {
+        return callback(err);
+      }
     });
   });
 };
@@ -54,10 +61,7 @@ function createRequest(component) {
   return (api, opts, cb) => request(`${host}${api}`, opts, cb);
 }
 
-function renderToString(store, router) {
-  const el = createElement(App, { store, router });
-  const appHtml = ReactDOMServer.renderToString(el);
-
+function renderToHTML(store, router, appHtml) {
   const chunkNames = getChunkNames(router.location);
   const stylesheets = [
     `<link href="${config.rootdir}${revisions[`${appName}.css`]}" rel="stylesheet" />`,
